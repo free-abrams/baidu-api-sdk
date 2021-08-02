@@ -19,6 +19,26 @@ require_once 'lib/AipBase.php';
 class AipImageClassify extends AipBase {
 
     /**
+     * @var string
+     */
+    private $traffic_flowUrl = 'https://aip.baidubce.com/rest/2.0/image-classify/v1/traffic_flow';
+
+    /**
+     * @var string
+     */
+    private $vehicle_segUrl = 'https://aip.baidubce.com/rest/2.0/image-classify/v1/vehicle_seg';
+
+    /**
+     * @var string
+     */
+    private $vehicle_detect_highUrl = 'https://aip.baidubce.com/rest/2.0/image-classify/v1/vehicle_detect_high';
+
+    /**
+     * @var string
+     */
+    private $vehicle_attrUrl = 'https://aip.baidubce.com/rest/2.0/image-classify/v1/vehicle_attr';
+
+    /**
      * 通用物体识别 advanced_general api url
      * @var string
      */
@@ -630,5 +650,207 @@ class AipImageClassify extends AipBase {
     }
 
 
+
+
+    /**
+     * 车辆属性识别
+     * 传入单帧图像，检测图片中所有车辆，返回每辆车的类型和坐标位置，可识别小汽车、卡车、巴士、摩托车、三轮车、自行车6大类车辆，
+     *
+     * @param image  二进制图像数据
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   type 是否选定某些属性输出对应的信息，可从12种输出属性中任选若干，用英文逗号分隔（例如vehicle_type,roof_rack,skylight）。默认输出全部属性
+     * @return array
+     */
+    public function vehicleAttr($image, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['image'] = base64_encode($image);
+
+        return $this->request($this->vehicle_attrUrl, $data);
+    }
+
+
+    /**
+     * 车辆属性识别
+     * 传入单帧图像，检测图片中所有车辆，返回每辆车的类型和坐标位置，可识别小汽车、卡车、巴士、摩托车、三轮车、自行车6大类车辆，
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   type 是否选定某些属性输出对应的信息，可从12种输出属性中任选若干，用英文逗号分隔（例如vehicle_type,roof_rack,skylight）。默认输出全部属性
+     * @return array
+     */
+    public function vehicleAttrUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->vehicle_attrUrl, $data);
+    }
+
+
+    /**
+     * 车辆检测-高空版
+     * 面向高空拍摄视角（30米以上），传入单帧图像，检测图片中所有车辆，返回每辆车的坐标位置（不区分车辆类型），并进行车辆计数，支持指定矩形区域的车辆检测与数量统计。
+     *
+     * @param image  二进制图像数据
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   area 只统计该矩形区域内的车辆数，缺省时为全图统计。逗号分隔，如‘x1,y1,x2,y2,x3,y3...xn,yn'，按顺序依次给出每个顶点的x、y坐标（默认尾点和首点相连），形成闭合矩形区域。
+     * @return array
+     */
+    public function vehicleDetectHigh($image, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['image'] = base64_encode($image);
+
+        return $this->request($this->vehicle_detect_highUrl, $data);
+    }
+
+
+    /**
+     * 车辆检测-高空版
+     * 面向高空拍摄视角（30米以上），传入单帧图像，检测图片中所有车辆，返回每辆车的坐标位置（不区分车辆类型），并进行车辆计数，支持指定矩形区域的车辆检测与数量统计。
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   area 只统计该矩形区域内的车辆数，缺省时为全图统计。逗号分隔，如‘x1,y1,x2,y2,x3,y3...xn,yn'，按顺序依次给出每个顶点的x、y坐标（默认尾点和首点相连），形成闭合矩形区域。
+     * @return array
+     */
+    public function vehicleDetectHighUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->vehicle_detect_highUrl, $data);
+    }
+
+
+    /**
+     * 车型识别
+     * 识别图片中车辆的具体车型，可识别常见的3000+款车型（小汽车为主），输出车辆的品牌型号、颜色、年份、位置信息；支持返回对应识别结果的百度百科词条信息，包含词条名称、百科页面链接、百科图片链接、百科内容简介。
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   top_num 返回结果top n，默认5。e
+     *   baike_num 返回百科信息的结果数，默认不返回
+     * @return array
+     */
+    public function carDetectUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->car_detectUrl, $data);
+    }
+
+
+    /**
+     * 车辆检测
+     * 入单帧图像，检测图片中所有机动车辆，返回每辆车的类型和坐标位置，可识别小汽车、卡车、巴士、摩托车、三轮车5类车辆，并对每类车辆分别计数，同时可定位小汽车、卡车、巴士的车牌位置，支持指定矩形区域的车辆检测与数量统计
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   area 只统计该矩形区域内的车辆数，缺省时为全图统计。逗号分隔，如‘x1,y1,x2,y2,x3,y3...xn,yn'，按顺序依次给出每个顶点的x、y坐标（默认尾点和首点相连），形成闭合矩形区域。
+     * @return array
+     */
+    public function vehicleDetectUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->vehicle_detectUrl, $data);
+    }
+
+
+    /**
+     * 车辆分割
+     * 传入单帧图像，检测图像中的车辆，以小汽车为主，识别车辆的轮廓范围，与背景进行分离，返回分割后的二值图、灰度图，支持多个车辆、车门打开、后备箱打开、机盖打开、正面、侧面、背面等各种拍摄场景。
+     *
+     * @param image  二进制图像数据
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   type 可以通过设置type参数，自主设置返回哪些结果图，避免造成带宽的浪费。1）可选值说明：labelmap - 二值图像，需二次处理方能查看分割效果scoremap - 车辆前景灰度图2）type 参数值可以是可选值的组合，用逗号分隔；如果无此参数默认输出全部3类结果图
+     * @return array
+     */
+    public function vehicleSeg($image, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['image'] = base64_encode($image);
+
+        return $this->request($this->vehicle_segUrl, $data);
+    }
+
+
+    /**
+     * 车流统计
+     * 根据传入的连续视频图片序列，进行车辆检测和追踪，返回每个车辆的坐标位置、车辆类型（包括小汽车、卡车、巴士、摩托车、三轮车5类）。在原图中指定区域，根据车辆轨迹判断驶入/驶出区域的行为，统计各类车辆的区域进出车流量，可返回含统计值和跟踪框的渲染图。
+     *
+     * @param image  二进制图像数据
+     * @param case_id  任务ID（通过case_id区分不同视频流，自拟，不同序列间不可重复）
+     * @param case_init  每个case的初始化信号，为true时对该case下的跟踪算法进行初始化，为false时重载该case的跟踪状态。当为false且读取不到相应case的信息时，直接重新初始化
+     * @param area  只统计进出该区域的车辆。逗号分隔，如‘x1,y1,x2,y2,x3,y3...xn,yn'，按顺序依次给出每个顶点的x、y坐标（默认尾点和首点相连），形成闭合多边形区域。
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   show 是否返回结果图（含统计值和跟踪框）。选true时返回渲染后的图片(base64)，其它无效值或为空则默认false。
+     * @return array
+     */
+    public function trafficFlow($image, $case_id, $case_init, $area, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['image'] = base64_encode($image);
+        $data['case_id'] = $case_id;
+        $data['case_init'] = $case_init;
+        $data['area'] = $area;
+
+        return $this->request($this->traffic_flowUrl, $data);
+    }
+
+
+    /**
+     * 车流统计
+     * 根据传入的连续视频图片序列，进行车辆检测和追踪，返回每个车辆的坐标位置、车辆类型（包括小汽车、卡车、巴士、摩托车、三轮车5类）。在原图中指定区域，根据车辆轨迹判断驶入/驶出区域的行为，统计各类车辆的区域进出车流量，可返回含统计值和跟踪框的渲染图。
+     *
+     * @param url  图片完整URL
+     * @param case_id  任务ID（通过case_id区分不同视频流，自拟，不同序列间不可重复）
+     * @param case_init  每个case的初始化信号，为true时对该case下的跟踪算法进行初始化，为false时重载该case的跟踪状态。当为false且读取不到相应case的信息时，直接重新初始化
+     * @param area  只统计进出该区域的车辆。逗号分隔，如‘x1,y1,x2,y2,x3,y3...xn,yn'，按顺序依次给出每个顶点的x、y坐标（默认尾点和首点相连），形成闭合多边形区域。
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   show 是否返回结果图（含统计值和跟踪框）。选true时返回渲染后的图片(base64)，其它无效值或为空则默认false。
+     * @return array
+     */
+    public function trafficFlowUrl($url, $case_id, $case_init, $area, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+        $data['case_id'] = $case_id;
+        $data['case_init'] = $case_init;
+        $data['area'] = $area;
+
+        return $this->request($this->traffic_flowUrl, $data);
+    }
 
 }

@@ -1285,22 +1285,12 @@ class AipOcr extends AipBase
      * @param array $options
      * @return bool|mix|mixed|string|string[]
      */
-    public function docAnalysis($image, $languageType, $resultType, $options = array())
+    public function docAnalysis($image,  $options = array())
     {
 
         $data = array();
 
         $data['image'] = base64_encode($image);
-
-        if ($languageType == null || in_array($languageType, array('CHN_ENG', 'ENG')) <> 1) {
-            return "please provide correct param: language_type ";
-        }
-        $data['language_type'] = $languageType;
-
-        if ($resultType == null || in_array($resultType, array('big', 'small')) <> 1) {
-            return "please provide correct param: result_type ";
-        }
-        $data['result_type'] = $resultType;
 
         $data = array_merge($data, $options);
 
@@ -1341,6 +1331,201 @@ class AipOcr extends AipBase
         $data['image'] = base64_encode($image);
         $data = array_merge($data, $options);
         return $this->request($this->webimageLoc, $data);
+    }
+
+
+    /**
+     * 二维码识别
+     * 对图片中的二维码、条形码进行检测和识别，返回存储的文字信息
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     * @return array
+     */
+    public function qrcodeUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->qrcodeUrl, $data);
+    }
+
+
+    /**
+     * 试卷分析与识别
+     * 支持对车辆合格证的23个关键字段进行结构化识别
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   multi_detect 控制是否开启多航班信息识别功能,默认值：false
+     * @return array
+     */
+    public function docAnalysisUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->docAnalysis, $data);
+    }
+
+
+    /**
+     * 机动车销售发票
+     * 支持对机动车销售发票的26个关键字段进行结构化识别，
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     * @return array
+     */
+    public function vehicleInvoiceUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->vehicleInvoiceUrl, $data);
+    }
+
+
+    /**
+     * 车辆合格证
+     * 支持对车辆合格证的23个关键字段进行结构化识别，包括合格证编号、发证日期、车辆制造企业名、车辆品牌、车辆名称、车辆型号、车架号、
+     * 车身颜色、发动机型号、发动机号、燃料种类、排量、功率、排放标准、轮胎数、轴距、轴数、转向形式、总质量、整备质量、驾驶室准乘人数、
+     * 最高设计车速、车辆制造日期
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   language_type 识别语言类型，默认为CHN_ENG
+     *   result_type 返回识别结果是按单行结果返回，还是按单字结果返回，默认为big
+     *   detect_direction 是否检测图像朝向，默认不检测，即：false
+     *   line_probability 是否返回每行识别结果的置信度。默认为false
+     *   words_type 文字类型。
+     * @return array
+     */
+    public function vehicleCertificateUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->vehicleCertificateUrl, $data);
+    }
+
+
+    /**
+     * 户口本识别
+     * 支持对户口本内常住人口登记卡的全部 22 个字段进行结构化识别，
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     * @return array
+     */
+    public function householdRegisterUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->householdRegisterUrl, $data);
+    }
+
+
+    /**
+     * 手写文字识别
+     * 支持对图片中的手写中文、手写数字进行检测和识别，
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   recognize_granularity 是否定位单字符位置，
+     *   probability 是否返回识别结果中每一行的置信度，默认为false，不返回置信度
+     *   detect_direction 是否检测图像朝向，默认不检测，即：false
+     * @return array
+     */
+    public function handwritingUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->handwritingUrl, $data);
+    }
+
+
+    /**
+     * 飞机行程单识别
+     * 支持对飞机行程单的24个字段进行结构化识别，包括电子客票号、印刷序号、姓名、始发站、目的站、航班号、日期、时间、票价、身份证号、
+     * 承运人、民航发展基金、保险费、燃油附加费、其他税费、合计金额、填开日期、订票渠道、客票级别、座位等级、销售单位号、签注、免费行李、
+     * 验证码。 同时，支持单张行程单上的多航班信息识别。
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   multi_detect 控制是否开启多航班信息识别功能,默认值：false
+     * @return array
+     */
+    public function airTicketUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->airTicketUrl, $data);
+    }
+
+
+    /**
+     * 通用机打发票
+     * 支持对图片中的手写中文、手写数字进行检测和识别，
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     *   location 是否输出位置信息，true：输出位置信息，false：不输出位置信息，默认false
+     * @return array
+     */
+    public function invoiceUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->invoiceUrl, $data);
+    }
+
+
+    /**
+     * 护照识别
+     * 支持对图片中的手写中文、手写数字进行检测和识别，
+     *
+     * @param url  图片完整URL
+     * @param array $options - 可选参数对象，key: value都为string类型
+     * @description options列表:
+     * @return array
+     */
+    public function passportUrl($url, $options=array()){
+
+        $data = array();
+
+        $data = array_merge($data, $options);
+        $data['url'] = $url;
+
+        return $this->request($this->passportUrl, $data);
     }
 
 }

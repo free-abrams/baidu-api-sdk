@@ -75,9 +75,9 @@ class AipHttpClient{
     public function post($url, $data=array(), $params=array(), $headers=array()){
         $url = $this->buildUrl($url, $params);
         $headers = array_merge($this->headers, $this->buildHeaders($headers));
-
         $ch = curl_init();
-        $this->prepare($ch);
+//        $this->prepare($ch);
+        var_dump($url);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HEADER, false);
